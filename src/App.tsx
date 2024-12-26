@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./App.css";
-import { Button, Calendar, Toast } from 'antd-mobile'
+import { Button, Calendar, Dropdown, Toast } from 'antd-mobile'
 import { Input } from "antd-mobile";
 import ReactECharts from 'echarts-for-react';
 import { getDataFromSouHu, getName } from "./server";
@@ -75,7 +75,7 @@ function App() {
       data: [...echartData.map(item => item.date)]
     },
     yAxis: {
-      name: '单股价格',
+      name: '股价',
       type: 'value',
       nameGap: 20,
       nameLocation: 'middle',
@@ -97,6 +97,7 @@ function App() {
         smooth: true,
         endLabel: {
           show: true,
+          offset: [-60, 20],
           formatter: function (params: any) {
             return `100股：${Math.ceil(params.data.value * 100)}元`
           }
@@ -105,6 +106,7 @@ function App() {
     ]
   }
   const handleSubmit = async () => {
+    dropDownRef?.current?.close()
     getNameInfo(stockNumber as string)
     let result: any = await getDataFromSouHu({
       code: `cn_${stockNumber}`,
@@ -122,42 +124,50 @@ function App() {
 
   const [stockNumber, setStockNumber] = useState<string>()
   const [date, setDate] = useState({
-    start: '',
-    end: ''
+    start: new Date(moment().subtract(4, 'years').calendar()),
+    end: new Date(moment().format('ll'))
   })
   const [visible, setVisible] = useState(false)
-
+  const dropDownRef = useRef<any>()
 
 
   return (
     <div className="App">
-      <div className="input_title">股票编号:</div>
-      <Input
-        placeholder="请输入股票编号"
-        type="number"
-        value={stockNumber}
-        onChange={(val) => {
-          setStockNumber(val)
-        }}
-      />
-      <div className="input_title" onClick={() => setVisible(val => !val)}>选择时间:</div>
-      {visible && <Calendar
-        selectionMode='range'
-        onChange={(val: any) => {
-          setDate({
-            start: val[0],
-            end: val[1]
-          })
-        }}
-      />}
-      <div>{moment(date.start).format("YYYY-MM-DD")}-{moment(date.end).format("YYYY-MM-DD")}</div>
-      <Button style={{ color: '#333' }} onClick={handleSubmit}> 获取数据</Button>
+      <Dropdown ref={dropDownRef}>
+        <Dropdown.Item key='sorter' title='股票走势'>
+          <div style={{ padding: 12 }}>
+            <div className="input_title">股票编号:</div>
+            <Input
+              placeholder="请输入股票编号"
+              type="number"
+              value={stockNumber}
+              onChange={(val) => {
+                setStockNumber(val)
+              }}
+            />
+            <div className="input_title" onClick={() => setVisible(val => !val)}>
+              <span>选择时间:</span>
+            </div>
+            {visible && <Calendar
+              selectionMode='range'
+              value={[date.start, date.end]}
+              onChange={(val: any) => {
+                setDate({
+                  start: val[0],
+                  end: val[1]
+                })
+              }}
+            />}
+            <div style={{ marginBottom: '16px', lineHeight: '32px' }}>{moment(date.start).format("YYYY-MM-DD")} / {moment(date.end).format("YYYY-MM-DD")}</div>
+            <Button block size="middle" color='primary' onClick={handleSubmit}> 获取数据</Button>
+          </div>
+        </Dropdown.Item>
+      </Dropdown>
       <ReactECharts style={{ height: '500px' }} option={options} />
       <div className="baseInfo">
         <div className="baseInfo_card">单前价格:<b >{tempInfo.value ?? "---"}元</b></div>
         <div className="baseInfo_card">盈利:<b style={{ color: (Math.ceil((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) > 0 ? 'red' : 'black') }}>{`${(Math.ceil(((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) * 100))}`}元</b></div>
       </div>
-
     </div>
   );
 }
