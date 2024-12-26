@@ -5,6 +5,15 @@
 .input_title {
   height: 40px;
   line-height: 40px;
-  color: #FFF;
+  /* color: #FFF; */
 }
-
+.baseInfo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  padding: 12px;
+}
+.baseInfo_card {
+  flex: 1;
+}

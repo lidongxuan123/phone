@@ -45,7 +45,8 @@ export const getName = async (code:any) => {
             type: 'all'
         }
     }).then((res: any) => {
-        let result = res.replaceAll('searchStock_cb(', '').replaceAll(')', '');
+        console.log(res)
+        let result = res.data.replaceAll('searchStock_cb(', '').replaceAll(')', '');
         return JSON.parse(result)
     })
 }

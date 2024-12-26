@@ -48,7 +48,7 @@ function App() {
   const getNameInfo = async (code: string) => {
     let reponse = await getName(code)
     if (reponse.status == 200) {
-      setBaseInfo(reponse.result[0])
+      setBaseInfo(reponse.result[1])
     } else {
       Toast.show('未查询到相关股票')
     }
@@ -105,6 +105,7 @@ function App() {
     ]
   }
   const handleSubmit = async () => {
+    getNameInfo(stockNumber as string)
     let result: any = await getDataFromSouHu({
       code: `cn_${stockNumber}`,
       start: moment(date.start).format("YYYYMMDD"),
@@ -146,14 +147,17 @@ function App() {
           setDate({
             start: val[0],
             end: val[1]
-            // start: moment(val[0]).format("YYYYMMDD"),
-            // end: moment(val[1]).format("YYYYMMDD")
           })
         }}
       />}
       <div>{moment(date.start).format("YYYY-MM-DD")}-{moment(date.end).format("YYYY-MM-DD")}</div>
       <Button style={{ color: '#333' }} onClick={handleSubmit}> 获取数据</Button>
-      <ReactECharts style={{ height: '600px' }} option={options} />
+      <ReactECharts style={{ height: '500px' }} option={options} />
+      <div className="baseInfo">
+        <div className="baseInfo_card">单前价格:<b >{tempInfo.value ?? "---"}元</b></div>
+        <div className="baseInfo_card">盈利:<b style={{ color: (Math.ceil((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) > 0 ? 'red' : 'black') }}>{`${(Math.ceil(((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) * 100))}`}元</b></div>
+      </div>
+
     </div>
   );
 }
