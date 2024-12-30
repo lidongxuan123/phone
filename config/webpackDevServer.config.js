@@ -12,7 +12,7 @@ const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
-
+const proxyFile = require('./proxy')
 module.exports = function (proxy,allowedHost) {
   const disableFirewall =
     !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true';
@@ -100,20 +100,21 @@ module.exports = function (proxy,allowedHost) {
       index: paths.publicUrlOrPath,
     },
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
-    proxy: {
-      '/api/': {
-        // 要代理的地址
-        target: 'https://q.stock.sohu.com/hisHq',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' },
-      },
-      '/dapi/': {
-        // 要代理的地址
-        target: 'https://q.stock.sohu.com',
-        changeOrigin: true,
-        pathRewrite: { '^/dapi': '' },
-      },
-    },
+    // proxy: {
+    //   '/api/': {
+    //     // 要代理的地址
+    //     target: 'https://q.stock.sohu.com/hisHq',
+    //     changeOrigin: true,
+    //     pathRewrite: { '^/api': '' },
+    //   },
+    //   '/dapi/': {
+    //     // 要代理的地址
+    //     target: 'https://q.stock.sohu.com',
+    //     changeOrigin: true,
+    //     pathRewrite: { '^/dapi': '' },
+    //   },
+    // },
+    proxy:proxyFile,
     onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`
       // middlewares before `redirectServedPath` otherwise will not have any effect

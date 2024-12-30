@@ -48,7 +48,15 @@ function App() {
   const getNameInfo = async (code: string) => {
     let reponse = await getName(code)
     if (reponse.status == 200) {
-      setBaseInfo(reponse.result[1])
+      if (reponse.result.length == 1) {
+        setBaseInfo(reponse.result[0])
+      } else {
+        (reponse.result as Array<any>).forEach((item: any) => {
+          if (item[0] == `cn_${code}`) {
+            setBaseInfo(item)
+          }
+        })
+      }
     } else {
       Toast.show('未查询到相关股票')
     }
