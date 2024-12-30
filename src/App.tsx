@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import "./App.css";
 import { Button, Calendar, Dropdown, Toast } from 'antd-mobile'
 import { Input } from "antd-mobile";
 import ReactECharts from 'echarts-for-react';
@@ -7,6 +6,7 @@ import { getDataFromSouHu, getName } from "./server";
 import { FirstInfoType, TempInfoType } from "./interface";
 import { filterData } from "./utils/filterData";
 import moment from 'moment'
+import { AppContainer } from "./styled";
 function App() {
   const [echartData, setEchartData] = useState<TempInfoType[]>([])
   const [tempInfo, setTempInfo] = useState<TempInfoType>({
@@ -121,9 +121,7 @@ function App() {
       start: moment(date.start).format("YYYYMMDD"),
       end: moment(date.end).format("YYYYMMDD"),
     })
-    console.log(result)
     if (result[0] && result[0].status == 0) {
-      console.log(result)
       handleData(result[0].hq)
     } else {
       Toast.show('获取数据失败')
@@ -140,7 +138,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <AppContainer>
       <Dropdown ref={dropDownRef}>
         <Dropdown.Item key='sorter' title='股票走势'>
           <div style={{ padding: 12 }}>
@@ -176,7 +174,7 @@ function App() {
         <div className="baseInfo_card">单前价格:<b >{tempInfo.value ?? "---"}元</b></div>
         <div className="baseInfo_card">盈利:<b style={{ color: (Math.ceil((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) > 0 ? 'red' : 'black') }}>{`${(Math.ceil(((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) * 100))}`}元</b></div>
       </div>
-    </div>
+    </AppContainer>
   );
 }
 
