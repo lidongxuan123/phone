@@ -1,4 +1,4 @@
-import instance from "./axios"
+import instance from "../../utils/axios"
 // code: cn_000858
 // start: 20240801
 // end: 20241129
