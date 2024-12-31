@@ -171,7 +171,7 @@ function App() {
       </Dropdown>
       <ReactECharts style={{ height: '500px' }} option={options} />
       <div className="baseInfo">
-        <div className="baseInfo_card">单前价格:<b >{tempInfo.value ?? "---"}元</b></div>
+        <div className="baseInfo_card">当前价格:<b >{tempInfo.value ?? "---"}元</b></div>
         <div className="baseInfo_card">盈利:<b style={{ color: (Math.ceil((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) > 0 ? 'red' : 'black') }}>{`${(Math.ceil(((tempInfo.value ?? 0) - (firstInfo.value ?? 0)) * 100))}`}元</b></div>
       </div>
     </AppContainer>
