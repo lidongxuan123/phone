@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Calendar, Dropdown, Toast } from 'antd-mobile'
 import { Input } from "antd-mobile";
 import ReactECharts from 'echarts-for-react';
 import { getDataFromSouHu, getName } from "./server";
 import { FirstInfoType, TempInfoType } from "./interface";
-import { filterData, calculatePercentage } from "../../utils/filterData";
+import { filterData, moneyAll } from "../../utils/filterData";
 import moment from 'moment'
-import { AppContainer, BaseInfoCard, SingleInput } from "./styled";
+import { AppContainer, BaseInfoCard, EchartsContaier, SingleInput } from "./styled";
 import { DeleteOutline } from "antd-mobile-icons"
 // 多个股票对比增长的百分比
 function Multi() {
@@ -14,8 +14,7 @@ function Multi() {
     const [nameLegend, setNameLegend] = useState<any>([])
     const [allPriceData, setAllPriceData] = useState<any>([])
     const [tempPriceData, setTempPriceData] = useState<any>([])
-
-
+    const lineColor = ['#FFe119', '#e6194B', '#4363d8', '#ffffff', '#42d4f4']
     const baseInfo = [
         {
             initialPrice: 123,
@@ -34,7 +33,7 @@ function Multi() {
 
     let timer = useRef()
     const handleData = (data: any) => {
-        let result = calculatePercentage(data.reverse())
+        let result = moneyAll(data.reverse())
         return result
     }
     // 获取股票名称
@@ -152,20 +151,33 @@ function Multi() {
                     showSymbol: false,
                     smooth: true,
                     data: dataList[index],
+                    lineStyle: {
+                        color: lineColor[index]
+                    }
                 })
             });
             setSeriesList(seriesTemp)
         }, 100)
     }
     const options = {
-        legend: nameLegend,
+        legend: {
+            orient: 'vertical',
+            textStyle: {
+                color:'white',
+                fontSize: 16,
+            },
+            top: 50,
+            right:20,
+        },
+     
         tooltip: {
-            show: true,
+            show: false,
             trigger: 'axis',
             alwaysShowContent: true,
             formatter: function (params: any) {
                 let result = params.map(function (item: any) {
-                    return `<span>${item.seriesName}: <span style="color: ${item.value > 0 ? 'red' : 'green'}">${item.value}%</span></span>`;
+                    console.log(item)
+                    return `<span>${item.seriesName}: <span style="color: ${item.value > 0 ? 'red' : 'green'}">${item.value}</span></span>`;
                 });
                 return result.join('<br/>');
             },
@@ -174,29 +186,57 @@ function Multi() {
             }
         },
         xAxis: {
-            name: '日期',
-            nameLocation: 'middle',
-            nameGap: 30,
             type: "category",
+            animation: false,
+            min: 'dataMin',  // 自动设置最小值
+            max: 'dataMax',  // 自动设置最大值
+            splitLine: {
+                show: false
+            },
+            axisLine: {
+                onZero: true,
+                show: false   // 隐藏 x 轴的坐标线
+            },
+            offset: 20,
+            axisTick: {
+                show: false   // 隐藏 x 轴的刻度
+            },
+            axisLabel: {
+                interval: 10,  // 显示所有标签
+                color: '#FFe119',  // 设置 x 轴刻度标签颜色为黄色
+                verticalAlign: 'middle'  // 标签垂直居中
+            },
+            nameTextStyle: {
+                color: '#FFe119',  // 黄色字体颜色
+                fontSize: 16,      // 字体大小
+                fontWeight: 'bold', // 字体加粗
+            },
+            boundaryGap: false,
+            data: seriesList?.[0] ? [...seriesList[0].data.map((item: any) => item.date)] : ''
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%'],
             animation: false,
             splitLine: {
                 show: false
             },
-            data: seriesList?.[0] ? [...seriesList[0].data.map((item: any) => item.date)] : ''
-        },
-        yAxis: {
-            name: '百分比',
-            type: 'value',
-            nameGap: 20,
-            nameLocation: 'middle',
-            boundaryGap: [0, '100%'],
-            animation: false,
-            splitLine: {
-                show: true
-            }
+            min: 250000,
+            axisLabel: {
+                color: '#FFe119'  // 设置 x 轴刻度标签颜色为黄色
+            },
+            nameTextStyle: {
+                color: '#FFe119',  // 黄色字体颜色
+                fontSize: 16,      // 字体大小
+                fontWeight: 'bold' // 字体加粗
+            },
+            splitNumber: 4, // 设置 5 个分隔
         },
         grid: {
             top: 80,
+            left: 70,
+            right: 40,
+            bottom: 50
         },
         series: seriesList
     }
@@ -272,32 +312,18 @@ function Multi() {
                     </div>
                 </Dropdown.Item>
             </Dropdown>
-            <ReactECharts style={{ height: '500px' }} option={options} />
-            <BaseInfoCard>
-                <div className="baseInfoList">
-                    {/* 股票名称 , 购买价格, 当前价格, 盈利多少*/}
-                    <div className="baseInfoList_single">
-                        <section>股票名称</section>
-                        <section>购买价格</section>
-                        <section>当前价格</section>
-                        <section>盈利/亏损</section>
-                    </div>
+            <EchartsContaier>
+                <ReactECharts style={{ width: '100%', height: `100%` }} option={options} />
+                {nameLegend.length > 0 && <ul>
                     {
                         nameLegend.map((item: any, index: number) => {
                             return (
-                                <div className="baseInfoList_single">
-                                    <section>{item[2]}</section>
-                                    <section>{allPriceData?.[index]?.[0]?.price}</section>
-                                    <section>{tempPriceData?.[index]?.price}</section>
-                                    <section style={{color: tempPriceData?.[index]?.value>0? 'red':'green'}}>{tempPriceData?.[index]?.value}%</section>
-                                </div>
+                                <li >{item[2]}: <span style={{ color: tempPriceData?.[index]?.value > 1000000 ? 'red' : 'green' }}>{tempPriceData?.[index]?.value}</span>元</li>
                             )
                         })
                     }
-                </div>
-            </BaseInfoCard>
-
-
+                </ul>}
+            </EchartsContaier>
         </AppContainer>
     );
 }

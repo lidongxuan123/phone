@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 export const AppContainer = styled.div`
     padding: 12px;
+    background:rgb(45, 39, 54);
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -47,6 +48,28 @@ export const BaseInfoCard = styled.div`
                 flex-grow:1 
             }
         }
-        
+    }
+`
+export const EchartsContaier = styled.div`
+    position:relative;
+    width: 800px;
+    height: 450px;
+    margin: 100px auto;
+    border: 1px solid;
+    ul{
+        position:absolute;
+        z-index:10;
+        list-style:none;
+        padding: 8px;
+        margin: 0;
+        top: 80px;
+        left: 50%;
+        border-radius: 4px;
+        background-color: white;
+        transform: translate(-50%,0%);
+        li {
+            display: block;
+            color:#4E5969
+        }
     }
 `

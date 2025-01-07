@@ -1,7 +1,7 @@
 import { Button } from "antd-mobile";
 import React from "react";
 import styled from "styled-components";
-import {redirect,useNavigate} from "react-router-dom"
+import { redirect, useNavigate } from "react-router-dom"
 const Container = styled.div`
     display:flex;
     justify-content:center;
@@ -20,11 +20,15 @@ const Home = () => {
             case 'multi':
                 navigate('/multi')
                 break;
+            case 'landscape':
+                navigate('/landscape')
+                break;
         }
     }
     return <Container>
         <Button onClick={() => routeJump('single')} block color='primary' size='large'>单股票历史趋势</Button>
         <Button onClick={() => routeJump('multi')} block color='primary' size='large'>多股票历史趋势</Button>
+        <Button onClick={() => routeJump('landscape')} block color='primary' size='large'>多股票历史横屏</Button>
     </Container>
 }
 

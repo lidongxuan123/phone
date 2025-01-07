@@ -12,14 +12,26 @@ export const filterData = (data: any) => {
 
 export const calculatePercentage = (data: any) => {
     let klines = data
-    console.log(data)
     let list = klines.map((item: any, index: number) => {
         console.log()
         return {
             date: item[0],
+            price: item[2],
             value: (((parseFloat(item[2]) - parseFloat(data[0][2])) / parseFloat(data[0][2])) * 100).toFixed(2)
         }
     })
     console.log(list)
+    return list
+}
+//展示100万的金额
+export const moneyAll = (data: any) => {
+    let klines = data
+    let list = klines.map((item: any, index: number) => {
+        return {
+            date: item[0],
+            price: item[2],
+            value: Math.ceil((parseFloat(item[2]) / parseFloat(data[0][2]))*1000000)
+        }
+    })
     return list
 }
