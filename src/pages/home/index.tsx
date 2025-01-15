@@ -23,12 +23,20 @@ const Home = () => {
             case 'landscape':
                 navigate('/landscape')
                 break;
+            case 'dividend':
+                navigate('/dividend')
+                break;
+            case 'dividendMoney':
+                navigate('/dividendMoney')
+                break;   
         }
     }
     return <Container>
         <Button onClick={() => routeJump('single')} block color='primary' size='large'>单股票历史趋势</Button>
         <Button onClick={() => routeJump('multi')} block color='primary' size='large'>多股票历史趋势</Button>
         <Button onClick={() => routeJump('landscape')} block color='primary' size='large'>多股票历史横屏</Button>
+        <Button onClick={() => routeJump('dividend')} block color='primary' size='large'>股票分红复投</Button>
+        <Button onClick={() => routeJump('dividendMoney')} block color='primary' size='large'>股票分红对比</Button>
     </Container>
 }
 
