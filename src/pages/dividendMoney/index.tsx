@@ -99,7 +99,7 @@ function Multi() {
                     return {
                         name: nameInfo[index][2],
                         type: 'line',
-                        stack: 'Total',
+                        smooth:true,
                         data: keys.slice(0, i + 1).map((ele: any, k: number) => item[ele]['percent'])
                     }
                 })
@@ -298,7 +298,7 @@ function Multi() {
                 show: false
             },
             min: 0,
-            max: 12,
+            max: 10,
             axisLabel: {
                 color: '#FFe119'  // 设置 x 轴刻度标签颜色为黄色
             },
@@ -317,6 +317,7 @@ function Multi() {
         },
         series: seriesList
     }
+    console.log(seriesList)
     const [stockNumberList, setStockNumberList] = useState<string[]>([''])
     const [date, setDate] = useState({
         start: new Date(moment().subtract(4, 'years').calendar()),

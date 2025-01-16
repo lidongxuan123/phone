@@ -45,13 +45,6 @@ export const getDividend = async (code: any) => {
     }).then( async (res: any) => {
         const {data} = res
         let result = getDividendMoney(data.result.data)
-        // console.log(result)
-        // await getDataFromSouHu({
-        //     code: `cn_${code}`,
-        //     start: moment(res)
-        // })
-
-        // console.log(result)
         return result
     })
 }
