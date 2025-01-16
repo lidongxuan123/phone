@@ -1,25 +1,6 @@
 import instance from "../../utils/axios"
-// code: cn_000858
-// start: 20240801
-// end: 20241129
-// stat: 1
-// order: D
-// period: d
-// callback: historySearchHandler
-// rt: jsonp
-// r: 0.29094710759823506
-// 0.6761753416533396: 
-
-
 
 export const getDataFromSouHu = async (values: any) => {
-    // return await request(
-    //     '/api/q.stock.sohu.com/hisHqm', {
-    //     method: 'get',
-    //     params: values
-    // }).then(res => {
-    //     return res
-    // })
     return instance({
         url: '/api/q.stock.sohu.com/hisHqm',
         method: 'get',
@@ -45,7 +26,6 @@ export const getName = async (code: any) => {
             type: 'all'
         }
     }).then((res: any) => {
-        console.log(res)
         let result = res.data.replaceAll('searchBox.output(', '').replaceAll(')', '');
         return JSON.parse(result)
     })

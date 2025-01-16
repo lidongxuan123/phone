@@ -48,16 +48,16 @@ function Multi() {
 
     // 获取每天的数据信息
     const getStockData = async (item: string) => {
-        let result = await getDataFromSouHu({
-            code: `cn_${item}`,
-            start: moment(date.start).format("YYYYMMDD"),
-            end: moment(date.end).format("YYYYMMDD"),
-        })
-        if (result[0] && result[0].status == 0) {
-            return handleData(result[0].hq)
-        } else {
-            Toast.show('解析数据存在问题')
-        }
+        // let result = await getDataFromSouHu({
+        //     code: `cn_${item}`,
+        //     start: moment(date.start).format("YYYYMMDD"),
+        //     end: moment(date.end).format("YYYYMMDD"),
+        // })
+        // if (result[0] && result[0].status == 0) {
+        //     return handleData(result[0].hq)
+        // } else {
+        //     Toast.show('解析数据存在问题')
+        // }
     }
 
     // 根据时间获取换慢展示分红的钱
@@ -117,6 +117,7 @@ function Multi() {
         if (timer.current) { clearInterval(timer.current) };
         dropDownRef?.current?.close()
         const promiseList: any[] = []
+        const stockList: any[] = []
         for (const item of stockNumberList) {
             await promiseList.push(await getNameInfo(item))
             await promiseList.push(await getDividend(item))

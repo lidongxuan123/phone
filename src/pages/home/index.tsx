@@ -1,7 +1,8 @@
 import { Button } from "antd-mobile";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { redirect, useNavigate } from "react-router-dom"
+import { getTime } from "./server";
 const Container = styled.div`
     display:flex;
     justify-content:center;
@@ -31,6 +32,7 @@ const Home = () => {
                 break;   
         }
     }
+
     return <Container>
         <Button onClick={() => routeJump('single')} block color='primary' size='large'>单股票历史趋势</Button>
         <Button onClick={() => routeJump('multi')} block color='primary' size='large'>多股票历史趋势</Button>

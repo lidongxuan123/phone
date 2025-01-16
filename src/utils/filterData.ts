@@ -67,7 +67,6 @@ export const getDividendMoney = (data: any) => {
                 
             } else {
                 result[year] = {
-                    // 100万分红钱
                     year: year,
                     millenMoney:  1000000*current.DIVIDENT_RATIO,
                     money: current.PRETAX_BONUS_RMB,

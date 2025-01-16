@@ -16,6 +16,13 @@ const proxy = {
         target: 'https://datacenter-web.eastmoney.com',
         changeOrigin: true,
         pathRewrite: { '^/eastmoney': '' },
+    },
+    '/time/':{
+        target :'https://quan.suning.com/',
+        changeOrigin:true,
+        pathRewrite:{
+            '^/time':''
+        }
     }
 }
 module.exports = proxy
