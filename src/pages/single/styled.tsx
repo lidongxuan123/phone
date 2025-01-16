@@ -33,7 +33,7 @@ export const SingleInput = styled.div`
 `
 
 export const BaseInfoCard = styled.div`
-    padding:12px;
+    /* padding:12px; */
     box-sizing:border-box;
     box-shadow:0 0 4px #333;
     .baseInfoList{
