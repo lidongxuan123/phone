@@ -20,17 +20,17 @@ const Container = styled.div`
   box-sizing:border-box;
 `
 const App = () => {
-  const endTime = '20250630'
-  useEffect(() => {
-    Promise.resolve(getTime()).then(res => {
-      const { data } = res
-      if (res.status == 200) {
-        if (endTime < data.sysTime1) {
-          window.location.href = "http://www.baidu.com"
-        }
-      }
-    })
-  }, [])
+  // const endTime = '20250630'
+  // useEffect(() => {
+  //   Promise.resolve(getTime()).then(res => {
+  //     const { data } = res
+  //     if (res.status == 200) {
+  //       if (endTime < data.sysTime1) {
+  //         window.location.href = "http://www.baidu.com"
+  //       }
+  //     }
+  //   })
+  // }, [])
   return <Container>
     <RouterProvider router={routerFirst}></RouterProvider>
   </Container>
