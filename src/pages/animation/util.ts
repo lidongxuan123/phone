@@ -1,3 +1,4 @@
+import moment from "moment"
 export const calculateComparativeData = (promiseList: any[], date: any) => {
     const [nameInfo, { summarize, native }, priceList] = promiseList
     let start = new Date(date.start)
@@ -16,7 +17,7 @@ export const calculateComparativeData = (promiseList: any[], date: any) => {
 
     let devidedMoneyLog = {
         noResub: 0,
-        resub:0
+        resub: 0
     }
     filterNativeDividedData = native.filter((item: any, index: number) => {
         return start <= new Date(item.EX_DIVIDEND_DATE) && end >= new Date(item.EX_DIVIDEND_DATE)
@@ -32,34 +33,37 @@ export const calculateComparativeData = (promiseList: any[], date: any) => {
         stockNum: tempData.stockNum,
         price: initPrice,
         remainMoney: tempData.remainMoney,
-        precent: summarize[start.getFullYear()].percent,
+        precent: summarize[start.getFullYear()]?.percent,
         statistical: 1000000
     })
     let tempReslut = []
-    console.log(filterNativeDividedData)
     result = filterNativeDividedData.map((item: any, index: number) => {
         const year = new Date(item.REPORT_DATE).getFullYear()
+        let date = moment(item.EX_DIVIDEND_DATE).subtract(1, 'days').format('YYYY-MM')
         let singleData = priceList.find((ele: any, i: number) => {
-            return item.EX_DIVIDEND_DATE.indexOf(ele.date) > -1
+          if(ele.date.indexOf(date)>-1) {
+            return ele
+          }
         })
-        tempData = getStock(tempData.stockNum / 10 * item.PRETAX_BONUS_RMB, Number(singleData.price), tempData.remainMoney, tempData.stockNum,initData.stockNum)
+        console.log(singleData)
+        tempData = getStock(tempData.stockNum / 10 * item.PRETAX_BONUS_RMB, Number(singleData?.price), tempData.remainMoney, tempData.stockNum, initData.stockNum)
         let singleResult = {
             time: item.EX_DIVIDEND_DATE,
             year: new Date(item.REPORT_DATE).getFullYear(),
             stockNum: tempData.stockNum,
-            price: singleData.price,
+            price: singleData?.price,
             remainMoney: (tempData.remainMoney).toFixed(2),
-            yearPrecent: (summarize[year].percent).toFixed(2),
-            precent: (item.PRETAX_BONUS_RMB / 10 / singleData.price).toFixed(2),
-            statistical: (tempData.stockNum * singleData.price + tempData.stockNum).toFixed(2),
+            yearPrecent: (summarize[year]?.percent ?? 0).toFixed(2),
+            precent: (item.PRETAX_BONUS_RMB / 10 / singleData?.price).toFixed(2),
+            statistical: (tempData.stockNum * singleData?.price + tempData.stockNum).toFixed(2),
             noStockNum: initData.stockNum,
-            noStatistical: (initData.stockNum * singleData.price + initData.remainMoney).toFixed(2),
-            noResub: (devidedMoneyLog.noResub+ initData.stockNum*  item.PRETAX_BONUS_RMB / 10 ).toFixed(2),
-            resub:(devidedMoneyLog.resub+ tempData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2),
+            noStatistical: (initData.stockNum * singleData?.price + initData.remainMoney).toFixed(2),
+            noResub: (devidedMoneyLog.noResub + initData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2),
+            resub: (devidedMoneyLog.resub + tempData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2),
         }
         devidedMoneyLog = {
-            noResub: Number((devidedMoneyLog.noResub+ initData.stockNum*  item.PRETAX_BONUS_RMB / 10).toFixed(2)),
-            resub:Number((devidedMoneyLog.resub+ tempData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2)),
+            noResub: Number((devidedMoneyLog.noResub + initData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2)),
+            resub: Number((devidedMoneyLog.resub + tempData.stockNum * item.PRETAX_BONUS_RMB / 10).toFixed(2)),
         }
         tempReslut.push(singleResult)
         return singleResult
@@ -68,7 +72,7 @@ export const calculateComparativeData = (promiseList: any[], date: any) => {
 }
 
 // 计算所买的股票和剩余的钱
-const getStock = (money: number, price: number, remainMoney: number, stockNumber: number, noresubStockNum:number) => {
+const getStock = (money: number, price: number, remainMoney: number, stockNumber: number, noresubStockNum: number) => {
     console.log(money, price, remainMoney, stockNumber)
     // 买的总数
     const num = Math.floor((money + remainMoney) / price)

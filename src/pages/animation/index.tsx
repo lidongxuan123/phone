@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import LetterGlitch from './letterGlitch';
 import Hyperspeed from './hyperspeed';
 import styled from 'styled-components';
-import { Button, Calendar, Dropdown, Radio, Space, Toast } from 'antd-mobile'
+import { Button, Calendar, Dropdown, Space, Toast } from 'antd-mobile'
 import { Input } from "antd-mobile";
 import moment from 'moment'
 import { AppContainer, BaseInfoCard, EchartsContaier, SingleInput } from "../dividendMoney/styled";
@@ -15,6 +15,7 @@ import { getDataFromSouHu } from "./server";
 import { filterData, moneyAll } from "../../utils/filterData";
 import { calculateComparativeData } from "./util";
 import 'animate.css';
+import { Flex, Radio } from 'antd';
 const Container = styled.div`
     width:100%;
     height:100%;
@@ -47,12 +48,11 @@ const Animation = () => {
   const [seriesList, setSeriesList] = useState<any>()
   const [nameLegend, setNameLegend] = useState<any>([])
   const [dividendData, setDividendData] = useState<any>([])
-  const [radio, setRadio] = useState('1')
+  const [radio, setRadio] = useState('4')
   const [xAxis, setxAxis] = useState<any>([])
   const [max, setMax] = useState<any>(undefined)
   const [year, setYear] = useState<number>()
   const [stockData, setStockData] = useState<any>({})
-
   let timer: any = useRef()
   const [stockNumber, setStockNumber] = useState<string>('')
   const [date, setDate] = useState({
@@ -63,6 +63,13 @@ const Animation = () => {
   const dropDownRef = useRef<any>()
   const handleChangeStockNumber = (val: string,) => {
     setStockNumber(val)
+  }
+  const onChange = (e:any) => {
+    setRadio(e.target.value)
+    setDate({
+      start: new Date(moment().subtract(e.target.value, 'years').calendar()),
+      end: new Date(moment().format('ll'))
+    })
   }
   const getNameInfo = async (code: string) => {
     let reponse = await getName(code)
@@ -151,7 +158,45 @@ const Animation = () => {
           <div className="input_title" onClick={() => setVisible(val => !val)}>
             <span>选择时间:{stockData.year ?? 0}</span>
           </div>
-          {visible && <Calendar
+          <Radio.Group
+            onChange={onChange}
+            value={radio}
+            options={[
+              {
+                value: 4,
+                label: (
+                  <Flex gap="small" justify="center" align="center" vertical>
+                    4
+                  </Flex>
+                ),
+              },
+              {
+                value: 5,
+                label: (
+                  <Flex gap="small" justify="center" align="center" vertical>
+                    5
+                  </Flex>
+                ),
+              },
+              {
+                value: 6,
+                label: (
+                  <Flex gap="small" justify="center" align="center" vertical>
+                    6
+                  </Flex>
+                ),
+              },
+              {
+                value: 10,
+                label: (
+                  <Flex gap="small" justify="center" align="center" vertical>
+                    10
+                  </Flex>
+                ),
+              },
+            ]}
+          />
+          {/* {visible && <Calendar
             selectionMode='range'
             value={[date.start, date.end]}
             onChange={(val: any) => {
@@ -160,7 +205,7 @@ const Animation = () => {
                 end: val[1]
               })
             }}
-          />}
+          />} */}
           <div style={{ marginBottom: '16px', lineHeight: '32px' }}>{moment(date.start).format("YYYY-MM-DD")} / {moment(date.end).format("YYYY-MM-DD")}</div>
           <Button block size="middle" color='primary' onClick={handleSubmit}> 获取数据</Button>
         </div>
@@ -218,7 +263,7 @@ const Animation = () => {
             分红时间：{stockData['year']}
           </Col>
           <Col span={6}>
-            本年分红：{`${stockData['yearPrecent']??0}%`}
+            本年分红：{`${stockData['yearPrecent'] ?? 0}%`}
           </Col>
         </Row>
       </div>
