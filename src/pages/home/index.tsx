@@ -29,16 +29,19 @@ const Home = () => {
                 break;
             case 'dividendMoney':
                 navigate('/dividendMoney')
-                break;   
+                break;
+            case 'animation':
+                    navigate('/animation')
+                    break;
         }
     }
 
     return <Container>
-        <Button onClick={() => routeJump('single')} block color='primary' size='large'>单股票历史趋势</Button>
-        <Button onClick={() => routeJump('multi')} block color='primary' size='large'>多股票历史趋势</Button>
-        <Button onClick={() => routeJump('landscape')} block color='primary' size='large'>多股票历史横屏</Button>
-        <Button onClick={() => routeJump('dividend')} block color='primary' size='large'>股票分红复投</Button>
+        <Button onClick={() => routeJump('single')} block color='primary' size='large'>手机屏幕显示股票走势</Button>
+        <Button onClick={() => routeJump('landscape')} block color='primary' size='large'>月显示股票走势</Button>
+        <Button onClick={() => routeJump('dividend')} block color='primary' size='large'>日显示股票走势</Button>
         <Button onClick={() => routeJump('dividendMoney')} block color='primary' size='large'>股票分红对比</Button>
+        <Button onClick={() => routeJump('animation')} block color='primary' size='large'>股票动态背景展示分红</Button>
     </Container>
 }
 

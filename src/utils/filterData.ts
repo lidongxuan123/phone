@@ -62,15 +62,15 @@ export const getDividendMoney = (data: any) => {
         if (year >= cyear - 10) {
             if (result[year]) {
                 result[year]['money'] = result[year]['money'] += current.PRETAX_BONUS_RMB
-                result[year]['percent'] = result[year]['percent'] += current.DIVIDENT_RATIO*100
-                result[year]['millenMoney'] = result[year]['millenMoney'] += (current.DIVIDENT_RATIO*1000000)
-                
+                result[year]['percent'] = result[year]['percent'] += current.DIVIDENT_RATIO * 100
+                result[year]['millenMoney'] = result[year]['millenMoney'] += (current.DIVIDENT_RATIO * 1000000)
+
             } else {
                 result[year] = {
                     year: year,
-                    millenMoney:  1000000*current.DIVIDENT_RATIO,
+                    millenMoney: 1000000 * current.DIVIDENT_RATIO,
                     money: current.PRETAX_BONUS_RMB,
-                    percent: current.DIVIDENT_RATIO*100,
+                    percent: current.DIVIDENT_RATIO * 100,
                 }
             }
         }
@@ -88,4 +88,33 @@ const statisticalDivident = (data: any) => {
         data[key]['statistical'] = total
     });
     return data
+}
+
+
+// 计算分红的钱
+export const getDividendMoneyRealTime = (data: any) => {
+    let devidendObject = {}
+    const cyear = new Date().getFullYear()
+    data.reduce((result: any, current: any, self: any) => {
+        const year = new Date(current.PUBLISH_DATE).getFullYear()
+        if (year >= cyear - 10) {
+            if (result[year]) {
+                result[year]['money'] = result[year]['money'] += current.PRETAX_BONUS_RMB
+                result[year]['percent'] = result[year]['percent'] += current.DIVIDENT_RATIO * 100
+                result[year]['millenMoney'] = result[year]['millenMoney'] += (current.DIVIDENT_RATIO * 1000000)
+            } else {
+                result[year] = {
+                    year: year,
+                    millenMoney: 1000000 * current.DIVIDENT_RATIO,
+                    money: current.PRETAX_BONUS_RMB,
+                    percent: current.DIVIDENT_RATIO * 100,
+                }
+            }
+        }
+        return result
+    }, devidendObject)
+    return {
+        summarize:statisticalDivident(devidendObject),
+        native: data
+    }
 }
